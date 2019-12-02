@@ -1,6 +1,3 @@
-//=============================================================================================
-// Computer Graphics Sample Program: Ray-tracing-let
-//=============================================================================================
 #include "framework.h"
 
 
@@ -63,57 +60,6 @@ GLfloat* convertMatrixType(const cv::Mat& m)
 	return mGL;
 }
 
-void generateProjectionModelview(const cv::Mat& calibration, const cv::Mat& rotation, const cv::Mat& translation, cv::Mat& projection, cv::Mat& modelview)
-{
-	typedef double precision;
-
-	projection.at<precision>(0, 0) = 2 * calibration.at<precision>(0, 0) / windowWidth;
-	projection.at<precision>(1, 0) = 0;
-	projection.at<precision>(2, 0) = 0;
-	projection.at<precision>(3, 0) = 0;
-
-	projection.at<precision>(0, 1) = 0;
-	projection.at<precision>(1, 1) = 2 * calibration.at<precision>(1, 1) / windowHeight;
-	projection.at<precision>(2, 1) = 0;
-	projection.at<precision>(3, 1) = 0;
-
-	projection.at<precision>(0, 2) = 1 - 2 * calibration.at<precision>(0, 2) / windowWidth;
-	projection.at<precision>(1, 2) = -1 + (2 * calibration.at<precision>(1, 2) + 2) / windowHeight;
-	projection.at<precision>(2, 2) = (zNear + zFar) / (zNear - zFar);
-	projection.at<precision>(3, 2) = -1;
-
-	projection.at<precision>(0, 3) = 0;
-	projection.at<precision>(1, 3) = 0;
-	projection.at<precision>(2, 3) = 2 * zNear * zFar / (zNear - zFar);
-	projection.at<precision>(3, 3) = 0;
-
-
-	modelview.at<precision>(0, 0) = rotation.at<precision>(0, 0);
-	modelview.at<precision>(1, 0) = rotation.at<precision>(1, 0);
-	modelview.at<precision>(2, 0) = rotation.at<precision>(2, 0);
-	modelview.at<precision>(3, 0) = 0;
-
-	modelview.at<precision>(0, 1) = rotation.at<precision>(0, 1);
-	modelview.at<precision>(1, 1) = rotation.at<precision>(1, 1);
-	modelview.at<precision>(2, 1) = rotation.at<precision>(2, 1);
-	modelview.at<precision>(3, 1) = 0;
-
-	modelview.at<precision>(0, 2) = rotation.at<precision>(0, 2);
-	modelview.at<precision>(1, 2) = rotation.at<precision>(1, 2);
-	modelview.at<precision>(2, 2) = rotation.at<precision>(2, 2);
-	modelview.at<precision>(3, 2) = 0;
-
-	modelview.at<precision>(0, 3) = translation.at<precision>(0, 0);
-	modelview.at<precision>(1, 3) = translation.at<precision>(1, 0);
-	modelview.at<precision>(2, 3) = translation.at<precision>(2, 0);
-	modelview.at<precision>(3, 3) = 1;
-
-	// This matrix corresponds to the change of coordinate systems.
-	static double changeCoordArray[4][4] = { {1, 0, 0, 0}, {0, -1, 0, 0}, {0, 0, -1, 0}, {0, 0, 0, 1} };
-	static Mat changeCoord(4, 4, CV_64FC1, changeCoordArray);
-
-	modelview = changeCoord * modelview;
-}
 
 void createArucoMarkers() {
 
@@ -342,7 +288,6 @@ void cameraCalibrationProcess(Mat& cameraMatrix, Mat& distanceCoefficients) {
 	}
 }
 
-
 int startWebcamMonitoring(const Mat& cameraMatrix, const Mat& distanceCoefficients, float arucoSquareDimension) {
 
 	Mat frame;
@@ -397,11 +342,6 @@ int startWebcamMonitoring(const Mat& cameraMatrix, const Mat& distanceCoefficien
 
 	return 1;
 }
-
-
-
-
-
 
 struct Material {
 	vec3 ka, kd, ks;
@@ -614,6 +554,59 @@ public:
 FullScreenTexturedQuad* fullScreenTexturedQuad;
 
 
+void generateProjectionModelview(const cv::Mat& calibration, const cv::Mat& rotation, const cv::Mat& translation, cv::Mat& projection, cv::Mat& modelview)
+{
+	typedef double precision;
+
+	projection.at<precision>(0, 0) = 2 * calibration.at<precision>(0, 0) / windowWidth;
+	projection.at<precision>(1, 0) = 0;
+	projection.at<precision>(2, 0) = 0;
+	projection.at<precision>(3, 0) = 0;
+
+	projection.at<precision>(0, 1) = 0;
+	projection.at<precision>(1, 1) = 2 * calibration.at<precision>(1, 1) / windowHeight;
+	projection.at<precision>(2, 1) = 0;
+	projection.at<precision>(3, 1) = 0;
+
+	projection.at<precision>(0, 2) = 1 - 2 * calibration.at<precision>(0, 2) / windowWidth;
+	projection.at<precision>(1, 2) = -1 + (2 * calibration.at<precision>(1, 2) + 2) / windowHeight;
+	projection.at<precision>(2, 2) = (zNear + zFar) / (zNear - zFar);
+	projection.at<precision>(3, 2) = -1;
+
+	projection.at<precision>(0, 3) = 0;
+	projection.at<precision>(1, 3) = 0;
+	projection.at<precision>(2, 3) = 2 * zNear * zFar / (zNear - zFar);
+	projection.at<precision>(3, 3) = 0;
+
+
+	modelview.at<precision>(0, 0) = rotation.at<precision>(0, 0);
+	modelview.at<precision>(1, 0) = rotation.at<precision>(1, 0);
+	modelview.at<precision>(2, 0) = rotation.at<precision>(2, 0);
+	modelview.at<precision>(3, 0) = 0;
+
+	modelview.at<precision>(0, 1) = rotation.at<precision>(0, 1);
+	modelview.at<precision>(1, 1) = rotation.at<precision>(1, 1);
+	modelview.at<precision>(2, 1) = rotation.at<precision>(2, 1);
+	modelview.at<precision>(3, 1) = 0;
+
+	modelview.at<precision>(0, 2) = rotation.at<precision>(0, 2);
+	modelview.at<precision>(1, 2) = rotation.at<precision>(1, 2);
+	modelview.at<precision>(2, 2) = rotation.at<precision>(2, 2);
+	modelview.at<precision>(3, 2) = 0;
+
+	modelview.at<precision>(0, 3) = translation.at<precision>(0, 0);
+	modelview.at<precision>(1, 3) = translation.at<precision>(1, 0);
+	modelview.at<precision>(2, 3) = translation.at<precision>(2, 0);
+	modelview.at<precision>(3, 3) = 1;
+
+	// This matrix corresponds to the change of coordinate systems.
+	static double changeCoordArray[4][4] = { {1, 0, 0, 0}, {0, -1, 0, 0}, {0, 0, -1, 0}, {0, 0, 0, 1} };
+	static Mat changeCoord(4, 4, CV_64FC1, changeCoordArray);
+
+	modelview = changeCoord * modelview;
+}
+
+
 void renderBackgroundGL(const cv::Mat& image)
 {
 
@@ -678,6 +671,19 @@ void renderBackgroundGL(const cv::Mat& image)
 	glPolygonMode(GL_BACK, polygonMode[1]);
 }
 
+cv::Mat cameraMatrix;
+cv::Mat distanceCoefficients;
+
+bool calibrated = false;
+
+Mat frame;
+vector<int> markerIds;
+vector<vector<Point2f>> markerCorners;
+Ptr<aruco::Dictionary> markerDictionary;
+
+VideoCapture vid(0);
+
+vector<Vec3d> rotationVectors, translationVectors;
 
 // Initialization, create an OpenGL context
 void onInitialization() {
@@ -699,40 +705,27 @@ void onInitialization() {
 
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
-}
-
-bool calibrated = false;
-
-// Window has become invalid: Redraw
-void onDisplay() {
-
-	cv::Mat cameraMatrix = cv::Mat::eye(3, 3, CV_64F);
-
-	cv::Mat distanceCoefficients;
+	cameraMatrix = cv::Mat::eye(3, 3, CV_64F);
 
 	if (!calibrated) {
 		loadCameraCalibration("IloveCameraCalibration", cameraMatrix, distanceCoefficients);
 		calibrated = true;
 	}
-	
 
-	Mat frame;
+	 markerDictionary = aruco::getPredefinedDictionary(aruco::PREDEFINED_DICTIONARY_NAME::DICT_4X4_50);
 
-	vector<int> markerIds;
-	vector<vector<Point2f>> markerCorners;
+	 //ha nem nyitotta meg, akkor visszatér
+	 if (!vid.isOpened()) {
+		 return;
+	 }
 
-	Ptr<aruco::Dictionary> markerDictionary = aruco::getPredefinedDictionary(aruco::PREDEFINED_DICTIONARY_NAME::DICT_4X4_50);
+	 namedWindow("Webcam", 1);
+}
 
-	VideoCapture vid(1);
 
-	//ha nem nyitotta meg, akkor visszatér
-	if (!vid.isOpened()) {
-		return;
-	}
 
-	namedWindow("Webcam", 1);
-
-	vector<Vec3d> rotationVectors, translationVectors;
+// Window has become invalid: Redraw
+void onDisplay() {
 
 	if (!vid.read(frame)) {
 		return;
@@ -769,7 +762,7 @@ void onDisplay() {
 	curr = 10 - curr;*/
 
 	renderBackgroundGL(frame);
-	//solvePnP(markerCorners, arucoSquareDimension, cameraMatrix, distanceCoefficients, rotationVectors, translationVectors);
+	solvePnP(markerCorners, arucoSquareDimension, cameraMatrix, distanceCoefficients, rotationVectors, translationVectors);
 
 	cv::Mat rotation;
 	cv::Rodrigues(rvec, rotation);
