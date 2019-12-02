@@ -77,11 +77,11 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>C:\opencv-4.1.2\build\include;$(SolutionDir)..\..\Libs\glew-1.13.0\include\;$(SolutionDir)..\..\Libs\freeglut\include\;$(SolutionDir)..\..\Libs\devil-1.7.8\include\;$(SolutionDir)..\..\Libs\glm\;$(SolutionDir)..\..\Common\src\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\opencv-4.1.2\build\include;C:\opengl\Libs\glew-1.13.0\include;C:\opengl\Libs\freeglut\include;$(SolutionDir)..\..\Libs\devil-1.7.8\include\;$(SolutionDir)..\..\Libs\glm\;$(SolutionDir)..\..\Common\src\</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\opencv-4.1.2\build\x64\vc16\lib;$(SolutionDir)..\..\Libs\freeglut\lib;$(SolutionDir)..\..\Libs\glew-1.13.0\lib\Release\Win32\;$(SolutionDir)..\..\Libs\devil-1.7.8\lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\opencv-4.1.2\build\x64\vc16\lib;$(SolutionDir)..\..\Libs\freeglut\lib;$(SolutionDir)..\..\Libs\devil-1.7.8\lib\;%(AdditionalLibraryDirectories);C:\opengl\Libs\glew-1.13.0\lib\Release\x64</AdditionalLibraryDirectories>
       <AdditionalDependencies>opencv_world412d.lib;glew32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -103,14 +103,14 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>C:\opencv-4.1.2\build\include;$(SolutionDir)..\..\Libs\glew-1.13.0\include\;$(SolutionDir)..\..\Libs\freeglut\include\;$(SolutionDir)..\..\Libs\devil-1.7.8\include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\opencv-4.1.2\build\include;C:\opengl\Libs\glew-1.13.0\include;C:\opengl\Libs\freeglut\include;$(SolutionDir)..\..\Libs\devil-1.7.8\include\;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalDependencies>opencv_world412.lib;glew32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>C:\opencv-4.1.2\build\x64\vc16\lib;$(SolutionDir)..\..\Libs\freeglut\lib;$(SolutionDir)..\..\Libs\glew-1.13.0\lib\Release\x64\;$(SolutionDir)..\..\Libs\devil-1.7.8\lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\opencv-4.1.2\build\x64\vc16\lib;$(SolutionDir)..\..\Libs\freeglut\lib;$(SolutionDir)..\..\Libs\glew-1.13.0\lib\Release\x64\;$(SolutionDir)..\..\Libs\devil-1.7.8\lib\;%(AdditionalLibraryDirectories);C:\opengl\Libs\glew-1.13.0\lib\Release\Win32;C:\opengl\Libs\glew-1.13.0\lib\Release\x64</AdditionalLibraryDirectories>
       <TargetMachine>MachineX64</TargetMachine>
     </Link>
   </ItemDefinitionGroup>
