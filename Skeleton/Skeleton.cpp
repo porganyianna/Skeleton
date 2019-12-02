@@ -697,6 +697,7 @@ void onInitialization() {
 	//// create program for the GPU
 	//gpuProgram.create(vertexSource, fragmentSource, "fragmentColor");
 
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
 }
 
@@ -768,7 +769,7 @@ void onDisplay() {
 	curr = 10 - curr;*/
 
 	renderBackgroundGL(frame);
-	solvePnP(markerCorners, arucoSquareDimension, cameraMatrix, distanceCoefficients, rotationVectors, translationVectors);
+	//solvePnP(markerCorners, arucoSquareDimension, cameraMatrix, distanceCoefficients, rotationVectors, translationVectors);
 
 	cv::Mat rotation;
 	cv::Rodrigues(rvec, rotation);
@@ -798,13 +799,13 @@ void onDisplay() {
 	glPopMatrix();
 	glColor3f(1.0, 1.0, 1.0);
 
-	imshow("Webcam", frame);
+	//imshow("Webcam", frame);
 	//imshow("live", img1);
 
 	glFlush();
 	glutSwapBuffers();
 
-	waitKey(27);
+	//waitKey(27);
 	glutPostRedisplay();
 
 
