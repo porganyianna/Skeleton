@@ -28,7 +28,7 @@ void onIdle();
 
 bool loadCameraCalibration(std::string name, cv::Mat& cameraMatrix, cv::Mat& distanceCoefficients);
 
-int startWebcamMonitoring(const cv::Mat& cameraMatrix, const cv::Mat& distanceCoefficients, float arucoSquareDimension);
+int WebcamMonitoring(const cv::Mat& cameraMatrix, const cv::Mat& distanceCoefficients, float arucoSquareDimension);
 
 // Entry point of the application
 int main(int argc, char * argv[]) {

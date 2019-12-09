@@ -683,6 +683,7 @@ Ptr<aruco::Dictionary> markerDictionary;
 
 VideoCapture vid(0);
 
+vector<Point3f> objectPoints;
 vector<Vec3d> rotationVectors, translationVectors;
 
 // Initialization, create an OpenGL context
@@ -714,12 +715,19 @@ void onInitialization() {
 
 	 markerDictionary = aruco::getPredefinedDictionary(aruco::PREDEFINED_DICTIONARY_NAME::DICT_4X4_50);
 
-	 //ha nem nyitotta meg, akkor visszatér
-	 if (!vid.isOpened()) {
-		 return;
-	 }
+	
+	 objectPoints.push_back(Point3f(9,6,0));
+	 objectPoints.push_back(Point3f(9,6,0));
+	 objectPoints.push_back(Point3f(19,6,0));
+	 objectPoints.push_back(Point3f(9,18,0));
+	 /*
+	 objectPoints.push_back(Point3f(0,0,1));
+	 objectPoints.push_back(Point3f(1,0,1));
+	 objectPoints.push_back(Point3f(1,1,1));
+	 objectPoints.push_back(Point3f(0,1,1));*/
 
-	 namedWindow("Webcam", 1);
+
+	 std::cout << "oninit" << std::endl;
 }
 
 
@@ -727,27 +735,20 @@ void onInitialization() {
 // Window has become invalid: Redraw
 void onDisplay() {
 
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	namedWindow("Webcam", 1);
+
+	//ha nem nyitotta meg, akkor visszatér
+	if (!vid.isOpened()) {
+		return;
+	}
+
 	if (!vid.read(frame)) {
 		return;
 	}
 
-	//így kell az opengl frame-et megnyitni, hogy átkonvertáljk a dolgokat
-	/*cv::cvtColor(frame, frame, cv::COLOR_BGR2RGB);
-	frame.convertTo(frame, CV_32FC3, 1 / 255.0f);*/
-
-
 	aruco::detectMarkers(frame, markerDictionary, markerCorners, markerIds);
 	aruco::estimatePoseSingleMarkers(markerCorners, arucoSquareDimension, cameraMatrix, distanceCoefficients, rotationVectors, translationVectors);
-
-
-	for (int i = 0; i < markerIds.size(); i++) {
-		aruco::drawDetectedMarkers(frame, markerCorners, markerIds);
-		aruco::drawAxis(frame, cameraMatrix, distanceCoefficients, rotationVectors[i], translationVectors[i], 0.1f);
-	}
-
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	//namedWindow("live", 1);
 
 	Mat modelview; //img1;
 
@@ -756,60 +757,58 @@ void onDisplay() {
 
 	modelview.create(4, 4, CV_64FC1);
 
-
-	/*float curr = getAngle(point1, point2, point3);
-	curr = curr / 10;
-	curr = 10 - curr;*/
-
-	renderBackgroundGL(frame);
-	solvePnP(markerCorners, arucoSquareDimension, cameraMatrix, distanceCoefficients, rotationVectors, translationVectors);
-
-	cv::Mat rotation;
-	cv::Rodrigues(rvec, rotation);
-
-
-	double offsetA[3][1] = { 9,6,6 };
-	Mat offset(3, 1, CV_64FC1, offsetA);
-	tvec = tvec + rotation * offset;
-
-	generateProjectionModelview(intrinsic_Matrix, rotation, tvec, Projection, modelview);
-	glMatrixMode(GL_PROJECTION);
-	GLfloat* projection = convertMatrixType(Projection);
-	glLoadMatrixf(projection);
-	delete[] projection;
-
-	glMatrixMode(GL_MODELVIEW);
-	GLfloat* modelView = convertMatrixType(modelview);
-	glLoadMatrixf(modelView);
-	delete[] modelView;
-
-
-	glPushMatrix();
-	glColor3f(1.0, 0.0, 0.0);
-
-	//ide kell rajzolni a dolgokat
-	glutWireTeapot(10.0);
-	glPopMatrix();
-	glColor3f(1.0, 1.0, 1.0);
-
-	//imshow("Webcam", frame);
-	//imshow("live", img1);
-
-	glFlush();
-	glutSwapBuffers();
-
-	//waitKey(27);
-	glutPostRedisplay();
-
-
-
-	//ez nem kell már  waitkey(27) miatt
-	/*if (waitKey(30) >= 0) {
-		break;
-	}*/
+	//így kell az opengl frame-et megnyitni, hogy átkonvertáljk a dolgokat
+	//cv::cvtColor(frame, frame, cv::COLOR_BGR2RGB);
+	//frame.convertTo(frame, CV_32FC3, 1 / 255.0f);
 	
+	if (!markerCorners.empty()) {
 
-	
+		for (int i = 0; i < markerIds.size(); i++) {
+			aruco::drawDetectedMarkers(frame, markerCorners, markerIds);
+			aruco::drawAxis(frame, cameraMatrix, distanceCoefficients, rotationVectors[i], translationVectors[i], 0.1f);
+
+			renderBackgroundGL(frame);
+			solvePnP(Mat(objectPoints), Mat(markerCorners[i]), cameraMatrix, distanceCoefficients, rotationVectors[i], translationVectors[i]);
+
+			cv::Mat rotationMatrix;
+			cv::Rodrigues(rvec, rotationMatrix);
+
+			double offsetA[3][1] = { 9,6,6 };
+			Mat offset(3, 1, CV_64FC1, offsetA);
+			tvec = tvec + rotationMatrix * offset;
+
+			generateProjectionModelview(intrinsic_Matrix, rotationMatrix, tvec, Projection, modelview);
+			glMatrixMode(GL_PROJECTION);
+			GLfloat* projection = convertMatrixType(Projection);
+			glLoadMatrixf(projection);
+			delete[] projection;
+
+			glMatrixMode(GL_MODELVIEW);
+			GLfloat* modelView = convertMatrixType(modelview);
+			glLoadMatrixf(modelView);
+			delete[] modelView;
+
+			glPushMatrix();
+			glColor3f(1.0, 0.0, 0.0);
+
+			//ide kell rajzolni a dolgokat
+			glutWireTeapot(10.0);
+			glPopMatrix();
+			glColor3f(1.0, 1.0, 1.0);
+
+			imshow("Webcam", frame);
+
+			glFlush();
+			glutSwapBuffers();
+
+			waitKey(27);
+			glutPostRedisplay();
+		}
+	}
+	else {
+
+		imshow("Webcam", frame);
+	}
 }
 
 // Key of ASCII code pressed
@@ -831,4 +830,5 @@ void onMouseMotion(int pX, int pY) {
 
 // Idle event indicating that some time elapsed: do animation here
 void onIdle() {
+	onDisplay();
 }
